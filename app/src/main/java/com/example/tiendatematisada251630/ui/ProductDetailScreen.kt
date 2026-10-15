@@ -3,8 +3,6 @@ package com.example.tiendatematisada251630.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -28,8 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.tiendatematisada251630.model.Product
-import com.example.tiendatematisada251630.model.StoreMessage
-import com.example.tiendatematisada251630.model.formatQuetzales
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,31 +34,28 @@ fun ProductDetailScreen(
     product: Product,
     producerName: String,
     isFavorite: Boolean,
-    quantityInOrder: Int,
-    totalOrderUnits: Int,
-    message: StoreMessage?,
     onFavoriteClick: () -> Unit,
     onProducerClick: () -> Unit,
-    onAddToOrder: () -> Unit,
-    onOrderClick: () -> Unit,
     onBack: () -> Unit
 ) {
-    var showTechnicalDetails by remember { mutableStateOf(false) }
+    var showTechnicalDetails by remember {
+        mutableStateOf(false)
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Detalle") },
+                title = {
+                    Text("Detalle")
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            imageVector =
+                                Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Regresar"
                         )
                     }
-                },
-                actions = {
-                    OrderActionButton(totalUnits = totalOrderUnits, onClick = onOrderClick)
                 }
             )
         }
@@ -72,46 +66,57 @@ fun ProductDetailScreen(
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            ProductImage(
-                imageUrl = product.imageUrl,
-                productName = product.name,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(220.dp)
-            )
-            Text(text = product.name, fontWeight = FontWeight.Bold)
-            Text(product.description)
             Text(
-                text = formatQuetzales(product.priceCents),
+                text = product.name,
                 fontWeight = FontWeight.Bold
             )
-            Text("${product.stock} disponibles · $quantityInOrder en el pedido")
 
-            Button(onClick = onAddToOrder) {
-                Text("Agregar al pedido")
-            }
+            Text(product.description)
 
-            if (message != null) {
-                MessagePanel(message = message, modifier = Modifier.fillMaxWidth())
-            }
+            Text(
+                text = String.format(
+                    Locale.getDefault(),
+                    "Precio: Q %.2f",
+                    product.price
+                )
+            )
 
-            TextButton(onClick = onFavoriteClick) {
-                Text(if (isFavorite) "★ Quitar de favoritos" else "☆ Agregar a favoritos")
+            Button(onClick = onFavoriteClick) {
+                Text(
+                    if (isFavorite) {
+                        "★ Quitar de favoritos"
+                    } else {
+                        "☆ Agregar a favoritos"
+                    }
+                )
             }
 
             HorizontalDivider()
 
-            TextButton(onClick = { showTechnicalDetails = !showTechnicalDetails }) {
-                Text(if (showTechnicalDetails) "Ocultar ficha técnica" else "Ver ficha técnica")
+            TextButton(
+                onClick = {
+                    showTechnicalDetails = !showTechnicalDetails
+                }
+            ) {
+                Text(
+                    if (showTechnicalDetails) {
+                        "Ocultar ficha técnica"
+                    } else {
+                        "Ver ficha técnica"
+                    }
+                )
             }
+
             if (showTechnicalDetails) {
                 Text(product.technicalDetails)
             }
 
             HorizontalDivider()
+
             Text("Productor: $producerName")
+
             Button(onClick = onProducerClick) {
                 Text("Ver perfil del productor")
             }

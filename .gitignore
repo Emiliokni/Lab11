@@ -13,16 +13,3 @@
 .externalNativeBuild
 .cxx
 local.properties
-# Gradle
-.gradle/
-**/build/
-
-# Android Studio
-.idea/
-*.iml
-local.properties
-
-# Android
-captures/
-.externalNativeBuild/
-.cxx/

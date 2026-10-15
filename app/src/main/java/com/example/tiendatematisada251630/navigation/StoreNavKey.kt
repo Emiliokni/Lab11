@@ -18,13 +18,4 @@ sealed interface StoreNavKey : NavKey {
     data class Profile(
         val producerId: String
     ) : StoreNavKey
-
-    @Serializable
-    data object Order : StoreNavKey
-
-    @Serializable
-    data object Checkout : StoreNavKey
-
-    @Serializable
-    data object Confirmation : StoreNavKey
 }
