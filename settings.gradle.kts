@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "TiendaTematisada251630"
+rootProject.name = "TiendaTematisadaLab12"
 include(":app")
