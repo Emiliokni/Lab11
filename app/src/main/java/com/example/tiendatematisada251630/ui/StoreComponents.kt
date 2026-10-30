@@ -1,4 +1,4 @@
-package com.example.tiendatematisada251630.ui
+﻿package com.example.tiendatematisada251630.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

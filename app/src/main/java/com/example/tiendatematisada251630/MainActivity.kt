@@ -4,7 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiendatematisada251630.navigation.StoreNavigation
@@ -18,9 +23,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            TiendaTematisada251630Theme() {
+            TiendaTematisada251630Theme {
                 StoreApp()
-                
             }
         }
     }
@@ -28,13 +32,34 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun StoreApp(
-    storeViewModel: StoreViewModel = viewModel()
+    storeViewModel: StoreViewModel = viewModel(factory = StoreViewModel.Factory)
 ) {
     val uiState =
         storeViewModel.uiState.collectAsStateWithLifecycle().value
 
+    if (!uiState.isLoaded && !uiState.isError) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+        return
+    }
+
     StoreNavigation(
         uiState = uiState,
-        onToggleFavorite = storeViewModel::toggleFavorite
+        onToggleFavorite = storeViewModel::toggleFavorite,
+        onQueryChange = storeViewModel::onQueryChange,
+        onCatalogOrderChange = storeViewModel::onCatalogOrderChange,
+        onAddToOrder = { productId, _ -> storeViewModel.addToOrder(productId) },
+        onDecreaseOrder = storeViewModel::decreaseOrderLine,
+        onRemoveFromOrder = storeViewModel::removeFromOrder,
+        onFullNameChange = storeViewModel::onFullNameChange,
+        onPhoneChange = storeViewModel::onPhoneChange,
+        onBillingTypeChange = storeViewModel::onBillingTypeChange,
+        onNitChange = storeViewModel::onNitChange,
+        onBusinessNameChange = storeViewModel::onBusinessNameChange,
+        onPaymentMethodChange = storeViewModel::onPaymentMethodChange,
+        onConfirmOrder = storeViewModel::confirmOrder,
+        onRetryLoad = storeViewModel::retryLoadProducts,
+        onConcurrencyTest = storeViewModel::onConcurrencyTest
     )
 }

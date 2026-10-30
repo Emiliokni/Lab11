@@ -1,4 +1,4 @@
-package com.example.tiendatematisada251630.model
+﻿package com.example.tiendatematisada251630.model
 
 enum class BillingType(val label: String) {
     CF("Consumidor Final (CF)"),

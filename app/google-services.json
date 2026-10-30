@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "196694253377",
+    "project_id": "laboratorio-a71c6",
+    "storage_bucket": "laboratorio-a71c6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:196694253377:android:648259a311af8a0df20bc0",
+        "android_client_info": {
+          "package_name": "com.example.tiendatematisada251630"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNxlX-E7hSOWu_zHwtxIis2yn7SZR99Y4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
