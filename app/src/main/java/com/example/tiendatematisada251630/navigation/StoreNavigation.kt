@@ -1,10 +1,10 @@
-﻿package com.example.tiendatematisada251630.navigation
+package com.example.tiendatematisada251630.navigation
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,17 +13,17 @@ import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.example.tiendatematisada251630.model.StoreUiState
 import com.example.tiendatematisada251630.data.CatalogOrder
 import com.example.tiendatematisada251630.model.BillingType
 import com.example.tiendatematisada251630.model.PaymentMethod
+import com.example.tiendatematisada251630.model.StoreUiState
 import com.example.tiendatematisada251630.model.orderLines
 import com.example.tiendatematisada251630.model.orderTotalCents
 import com.example.tiendatematisada251630.model.totalOrderUnits
 import com.example.tiendatematisada251630.ui.CatalogScreen
 import com.example.tiendatematisada251630.ui.CheckoutScreen
-import com.example.tiendatematisada251630.ui.OrderScreen
 import com.example.tiendatematisada251630.ui.OrderConfirmationScreen
+import com.example.tiendatematisada251630.ui.OrderScreen
 import com.example.tiendatematisada251630.ui.ProducerProfileScreen
 import com.example.tiendatematisada251630.ui.ProductDetailScreen
 import kotlinx.coroutines.launch
@@ -44,6 +44,8 @@ fun StoreNavigation(
     onBusinessNameChange: (String) -> Unit,
     onPaymentMethodChange: (PaymentMethod) -> Unit,
     onConfirmOrder: suspend () -> Boolean,
+    onRetryLoad: () -> Unit,
+    onConcurrencyTest: (String, Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val backStack = rememberNavBackStack(StoreNavKey.Catalog)
@@ -97,13 +99,16 @@ fun StoreNavigation(
                     catalogOrder = uiState.catalogOrder,
                     totalOrderUnits = uiState.totalOrderUnits,
                     gridState = catalogGridState,
+                    isError = uiState.isError,
+                    errorMessage = uiState.errorMessage,
+                    onRetry = onRetryLoad,
                     onQueryChange = onQueryChange,
                     onCatalogOrderChange = onCatalogOrderChange,
                     onProductClick = { productId ->
                         backStack.add(StoreNavKey.Detail(productId))
                     },
-                    onFavoriteClick = onToggleFavorite,
-                    onOrderClick = ::navigateToOrder
+                    onOrderClick = ::navigateToOrder,
+                    onToggleFavorite = onToggleFavorite
                 )
             }
 
@@ -120,11 +125,13 @@ fun StoreNavigation(
                         quantityInOrder = uiState.orderQuantities[product.id] ?: 0,
                         totalOrderUnits = uiState.totalOrderUnits,
                         message = uiState.message,
+                        concurrencyTestResult = uiState.concurrencyTestResult,
                         onFavoriteClick = { onToggleFavorite(product.id) },
                         onProducerClick = {
                             backStack.add(StoreNavKey.Profile(product.producerId))
                         },
                         onAddToOrder = { onAddToOrder(product.id, 1) },
+                        onConcurrencyTest = { attempts -> onConcurrencyTest(product.id, attempts) },
                         onOrderClick = ::navigateToOrder,
                         onBack = ::navigateBack
                     )

@@ -1,4 +1,4 @@
-﻿package com.example.tiendatematisada251630.model
+package com.example.tiendatematisada251630.model
 
 import com.example.tiendatematisada251630.data.CatalogOrder
 
@@ -12,7 +12,6 @@ data class Product(
     val stock: Int,
     val imageUrl: String
 ) {
-    // La cuadrícula carga una versión pequeña; el detalle conserva la imagen completa.
     val thumbnailUrl: String
         get() = imageUrl.replace("/600/420", "/320/224")
 }
@@ -41,7 +40,10 @@ data class StoreUiState(
     val checkout: CheckoutUiState = CheckoutUiState(),
     val lastReceipt: OrderReceipt? = null,
     val catalogOrder: CatalogOrder = CatalogOrder.ORIGINAL,
-    val isLoaded: Boolean = false
+    val isLoaded: Boolean = false,
+    val isError: Boolean = false,
+    val errorMessage: String? = null,
+    val concurrencyTestResult: String? = null
 )
 
 data class OrderLine(

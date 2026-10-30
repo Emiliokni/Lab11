@@ -16,20 +16,11 @@ import com.example.tiendatematisada251630.navigation.StoreNavigation
 import com.example.tiendatematisada251630.ui.theme.TiendaTematisada251630Theme
 import com.example.tiendatematisada251630.viewmodel.StoreViewModel
 
-import com.google.firebase.auth.FirebaseAuth
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
-
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        val auth = FirebaseAuth.getInstance()
-        if (auth.currentUser == null) {
-            auth.signInAnonymously()
-        }
 
         setContent {
             TiendaTematisada251630Theme {
@@ -41,12 +32,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun StoreApp(
-    storeViewModel: StoreViewModel = viewModel()
+    storeViewModel: StoreViewModel = viewModel(factory = StoreViewModel.Factory)
 ) {
     val uiState =
         storeViewModel.uiState.collectAsStateWithLifecycle().value
 
-    if (!uiState.isLoaded) {
+    if (!uiState.isLoaded && !uiState.isError) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
@@ -58,8 +49,8 @@ private fun StoreApp(
         onToggleFavorite = storeViewModel::toggleFavorite,
         onQueryChange = storeViewModel::onQueryChange,
         onCatalogOrderChange = storeViewModel::onCatalogOrderChange,
-        onAddToOrder = storeViewModel::addToOrder,
-        onDecreaseOrder = storeViewModel::decreaseOrder,
+        onAddToOrder = { productId, _ -> storeViewModel.addToOrder(productId) },
+        onDecreaseOrder = storeViewModel::decreaseOrderLine,
         onRemoveFromOrder = storeViewModel::removeFromOrder,
         onFullNameChange = storeViewModel::onFullNameChange,
         onPhoneChange = storeViewModel::onPhoneChange,
@@ -67,6 +58,8 @@ private fun StoreApp(
         onNitChange = storeViewModel::onNitChange,
         onBusinessNameChange = storeViewModel::onBusinessNameChange,
         onPaymentMethodChange = storeViewModel::onPaymentMethodChange,
-        onConfirmOrder = storeViewModel::confirmOrder
+        onConfirmOrder = storeViewModel::confirmOrder,
+        onRetryLoad = storeViewModel::retryLoadProducts,
+        onConcurrencyTest = storeViewModel::onConcurrencyTest
     )
 }
