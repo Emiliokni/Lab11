@@ -1,4 +1,4 @@
-package com.example.tiendatematisada251630.navigation
+﻿package com.example.tiendatematisada251630.navigation
 
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable

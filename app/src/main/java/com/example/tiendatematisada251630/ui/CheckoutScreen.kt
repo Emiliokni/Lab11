@@ -1,4 +1,4 @@
-package com.example.tiendatematisada251630.ui
+﻿package com.example.tiendatematisada251630.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement

@@ -16,11 +16,20 @@ import com.example.tiendatematisada251630.navigation.StoreNavigation
 import com.example.tiendatematisada251630.ui.theme.TiendaTematisada251630Theme
 import com.example.tiendatematisada251630.viewmodel.StoreViewModel
 
+import com.google.firebase.auth.FirebaseAuth
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val auth = FirebaseAuth.getInstance()
+        if (auth.currentUser == null) {
+            auth.signInAnonymously()
+        }
 
         setContent {
             TiendaTematisada251630Theme {

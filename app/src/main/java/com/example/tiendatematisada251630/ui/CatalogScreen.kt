@@ -165,6 +165,31 @@ fun CatalogScreen(
                             }
                         }
                     }
+
+                    var seedingStatus by remember { mutableStateOf<String?>(null) }
+                    var isSeeding by remember { mutableStateOf(false) }
+
+                    androidx.compose.material3.OutlinedButton(
+                        onClick = {
+                            if (!isSeeding) {
+                                isSeeding = true
+                                seedingStatus = "Cargando catálogo a Firestore..."
+                                scope.launch {
+                                    val result = com.example.tiendatematisada251630.data.CatalogSeeder.seedCatalog()
+                                    isSeeding = false
+                                    seedingStatus = if (result.isSuccess) {
+                                        "¡Éxito! Se subieron ${result.getOrNull()} productos."
+                                    } else {
+                                        "Error: ${result.exceptionOrNull()?.localizedMessage}"
+                                    }
+                                }
+                            }
+                        },
+                        enabled = !isSeeding,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(seedingStatus ?: "Cargar Catálogo Inicial (500 productos)")
+                    }
                 }
             }
 
